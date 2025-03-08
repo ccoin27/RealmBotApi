@@ -2,6 +2,6 @@
     "scripts": {
       "dev": "vite",
       "build": "vite build",
-      "start": "node server.js"
+      "main": "node server.js"
     }
   }
