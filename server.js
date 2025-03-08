@@ -16,7 +16,7 @@ export default {
         const filePath = `sprites/enemies/${enemy}/${animation}.gif`;
   
         // Получаем файл из хранилища (предполагается, что файлы загружены в Cloudflare Workers)
-        const file = await fetch(`https://example.com/${filePath}`);
+        const file = await fetch(`${filePath}`);
   
         // Если файл найден, возвращаем его содержимое
         if (file.ok) {
