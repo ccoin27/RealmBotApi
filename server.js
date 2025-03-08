@@ -12,11 +12,14 @@ export default {
       }
   
       try {
-        // Создаем путь к файлу
+        // Формируем путь к файлу на GitHub
         const filePath = `sprites/enemies/${enemy}/${animation}.gif`;
   
-        // Получаем файл из хранилища (предполагается, что файлы загружены в Cloudflare Workers)
-        const file = await fetch(`${filePath}`);
+        // Формируем URL для получения файла с GitHub (замени на свой репозиторий)
+        const githubRawUrl = `https://raw.githubusercontent.com/ccoin27/rpg_api/main/${filePath}`;
+  
+        // Получаем файл с GitHub
+        const file = await fetch(githubRawUrl);
   
         // Если файл найден, возвращаем его содержимое
         if (file.ok) {
