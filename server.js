@@ -1,27 +1,37 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-
-const app = express();
-app.use(cors());
-
-app.get("/", (req, res) => {
-  res.send("Сигма момент");
-});
-
-// Отдаём GIF-анимации
-app.get("/:enemy/:animation.gif", (req, res) => {
-  const { enemy, animation } = req.params;
-  const filePath = path.join(__dirname, "sprites/enemies", enemy, `${animation}.gif`);
-
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      res.status(404).send("Файл не найден");
-    }
-  });
-});
-
-const PORT = 8080;
-app.listen(PORT, () => {
-  console.log(`🚀 Сервер запущен на http://localhost:${PORT}`);
-});
+export default {
+    async fetch(req) {
+      const { pathname } = new URL(req.url);
+      const parts = pathname.split('/');
+  
+      // Параметры из URL
+      const enemy = parts[1];
+      const animation = parts[2]?.replace('.gif', '');  // убираем .gif из имени анимации
+  
+      if (!enemy || !animation) {
+        return new Response("Некорректный запрос", { status: 400 });
+      }
+  
+      try {
+        // Создаем путь к файлу
+        const filePath = `sprites/enemies/${enemy}/${animation}.gif`;
+  
+        // Получаем файл из хранилища (предполагается, что файлы загружены в Cloudflare Workers)
+        const file = await fetch(`https://example.com/${filePath}`);
+  
+        // Если файл найден, возвращаем его содержимое
+        if (file.ok) {
+          const arrayBuffer = await file.arrayBuffer();
+          return new Response(arrayBuffer, {
+            status: 200,
+            headers: { "Content-Type": "image/gif" }
+          });
+        } else {
+          return new Response("Файл не найден", { status: 404 });
+        }
+      } catch (error) {
+        console.error("Ошибка при получении файла:", error);
+        return new Response("Ошибка сервера", { status: 500 });
+      }
+    },
+  };
+  
