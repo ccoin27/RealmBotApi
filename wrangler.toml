@@ -1,0 +1,3 @@
+name = "rpgapi"
+type = "javascript"
+main = "index.js"
